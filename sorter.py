@@ -54,17 +54,27 @@ def search_jobs(searched_words, potential_jobs):
 def search_skills(searched_words, potential_jobs):
     job_ordering = search_jobs(searched_words, potential_jobs)
     priority = []
+    #going through the keys and values in job_ordering
     for k, v in job_ordering.items():
+        #checking if that key is in potential jobs
         if k in potential_jobs:
+            #making a variable assigning our skills 
             skills = potential_jobs[k]["skills"]
+            #check if skills is not already in priority
             if skills not in priority:
+                #if not in priority, add it priority
                 priority += skills
     #need to make sure that there are no dups
     sorted_list = []
+    #set of the values we have already seen
     we_saw = set()
+    #going through the values
     for value in priority:
+        #if we didnt see it
         if value not in we_saw:
+            #add to our new sorted list
             sorted_list.append(value)
+            #add it to our seen values
             we_saw.add(value)
     print(sorted_list)
     return sorted_list
@@ -103,21 +113,30 @@ def best_jobs(searched_words, potential_jobs, resume_skills):
 def best_skills(searched_words, potential_jobs, resume_skills):
     job_ordering = best_jobs(searched_words, potential_jobs, resume_skills)
     priority = []
+    #going through the keys and values in best_jobs
     for k, v in job_ordering.items():
+        #checking if that key is in potential jobs
         if k in potential_jobs:
+            #making a variable assigning our skills
             skills = potential_jobs[k]["skills"]
+             #check if skills is not already in priority
             if skills not in priority:
+                #if not in priority, add it priority
                 priority += skills
     #need to make sure that there are no dups
     sorted_list = []
+    #set of the values we have already seen
     we_saw = set()
     for value in priority:
+        #if we didnt see it
         if value not in we_saw:
+            #add to our new sorted list
             sorted_list.append(value)
+             #add it to our seen values
             we_saw.add(value)
     print(sorted_list)
     return sorted_list
-
+    
 #tests 1st
 search_jobs(searched_words, potential_jobs)
 #tests 2nd 
