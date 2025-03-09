@@ -146,3 +146,19 @@ best_jobs(searched_words, potential_jobs, resume_skills)
 #tests 4th
 best_skills(searched_words, potential_jobs, resume_skills)
 
+# unit tests
+import unittest
+
+class TestSorter(unittest.TestCase):
+    def test_jobs(self):
+        self.assertEqual(search_jobs(searched_words, potential_jobs), {'Google intern': 2, 'Amazon SDE': 1})
+
+    def test_skills(self):
+        self.assertEqual(search_skills(searched_words, potential_jobs), ['kind', 'coding', 'sociable', 'hardworking', 'python'])
+
+    def test_best_jobs(self):
+        self.assertEqual(best_jobs(searched_words, potential_jobs, resume_skills), {'Amazon SDE': 5, 'Google intern': 4})
+
+    def test_best_skills(self):
+        self.assertEqual(best_skills(searched_words, potential_jobs, resume_skills), ['coding', 'sociable', 'hardworking', 'python', 'kind'])
+
