@@ -19,12 +19,43 @@ potential_jobs = {
     "Google intern" : {
         "words": ["internship", "google"],
         "skills": ["kind", "coding"]
+    },
+    "Elementary School Teacher" : {
+        "words": ["teaching", "elementary school"],
+        "skills": ["kind", "teaching", "sociable"]
+    },
+    "Nurse": {
+        "words": ["healthcare", "hospital"],
+        "skills": ["compassion", "medical knowledge", "attention to detail"]
+    },
+    "Graphic Designer": {
+        "words": ["design", "creative"],
+        "skills": ["creativity", "Adobe Photoshop", "visual communication"]
+    },
+    "Electrician": {
+        "words": ["wiring", "electrical work"],
+        "skills": ["technical knowledge", "troubleshooting", "safety awareness"]
+    },
+    "Marketing Manager": {
+        "words": ["advertising", "branding"],
+        "skills": ["strategic thinking", "communication", "data analysis"]
     }
+    
 }
 #searched words in search bar
 searched_words = ["job", "Computer Science", "internship", "intern", "aws", "google"]
+searched_words_2 = ["job", "teaching", "internship", "intern", "elementary school"]
+searched_words_3 = ["healthcare", "hospital"]
+searched_words_4 = ["design", "creative"]
+searched_words_5 = ["wiring", "electrical work", "creative"]
+searched_words_6 = ["wiring", "advertising", "branding"]
 #skills in inserted resume
 resume_skills = ["hardworking", "sociable", "kind", "coding", "python"]
+resume_skills_2 = ["hardworking", "sociable", "kind", "coding", "python", "teaching"]
+resume_skills_3 = ["compassion", "medical knowledge", "attention to detail"]
+resume_skills_4 = ["creativity", "Adobe Photoshop", "visual communication"]
+resume_skills_5 = ["technical knowledge", "troubleshooting", "safety awareness"]
+resume_skills_6 = ["strategic thinking", "communication", "data analysis"]
 
 #finds best jobs based on searched words
 def search_jobs(searched_words, potential_jobs):
@@ -152,13 +183,39 @@ import unittest
 class TestSorter(unittest.TestCase):
     def test_jobs(self):
         self.assertEqual(search_jobs(searched_words, potential_jobs), {'Google intern': 2, 'Amazon SDE': 1})
-
+    def test_jobs_2(self):
+        self.assertEqual(search_jobs(searched_words_2, potential_jobs), {'Elementary School Teacher': 2, 'Google intern': 1})
+    def test_jobs_3(self):
+        self.assertEqual(search_jobs(searched_words_6, potential_jobs), {'Marketing Manager': 2, 'Electrician': 1})
+    def test_jobs_4(self):
+        self.assertEqual(search_jobs(searched_words_5, potential_jobs), {'Electrician': 2, 'Graphic Designer': 1})
+    def test_jobs_5(self):
+        self.assertEqual(search_jobs(searched_words_4, potential_jobs), {'Graphic Designer': 2})
     def test_skills(self):
         self.assertEqual(search_skills(searched_words, potential_jobs), ['kind', 'coding', 'sociable', 'hardworking', 'python'])
+    def test_skills_2(self):
+        self.assertEqual(search_skills(searched_words_2, potential_jobs), ['kind', 'teaching', 'sociable', 'coding'])
+    def test_skills_3(self):
+        self.assertEqual(search_skills(searched_words_4, potential_jobs), ['creativity', 'Adobe Photoshop', 'visual communication'])
+    def test_skills_4(self):
+        self.assertEqual(search_skills(searched_words_3, potential_jobs), ['compassion', 'medical knowledge', 'attention to detail'])
 
     def test_best_jobs(self):
-        self.assertEqual(best_jobs(searched_words, potential_jobs, resume_skills), {'Amazon SDE': 5, 'Google intern': 4})
-
+        self.assertEqual(best_jobs(searched_words, potential_jobs, resume_skills), {'Amazon SDE': 5, 'Google intern': 4, 'Elementary School Teacher' : 2})
+    def test_best_jobs_2(self):
+        self.assertEqual(best_jobs(searched_words_2, potential_jobs, resume_skills_5), {'Electrician': 3, 'Elementary School Teacher': 2, 'Google intern': 1})
+    def test_best_jobs_3(self):
+        self.assertEqual(best_jobs(searched_words_5, potential_jobs, resume_skills_5), {'Electrician': 5, 'Graphic Designer': 1})
+    def test_best_jobs_4(self):
+        self.assertEqual(best_jobs(searched_words_6, potential_jobs, resume_skills_6), {'Marketing Manager': 5, 'Electrician': 1})
     def test_best_skills(self):
-        self.assertEqual(best_skills(searched_words, potential_jobs, resume_skills), ['coding', 'sociable', 'hardworking', 'python', 'kind'])
+        self.assertEqual(best_skills(searched_words, potential_jobs, resume_skills), ['coding', 'sociable', 'hardworking', 'python', 'kind', 'teaching'])
+    def test_best_skills(self):
+        self.assertEqual(best_skills(searched_words_2, potential_jobs, resume_skills_2), ['kind', 'teaching', 'sociable', 'coding', 'hardworking', 'python'])
+    def test_best_skills(self):
+        self.assertEqual(best_skills(searched_words_6, potential_jobs, resume_skills_3), ['compassion', 'medical knowledge', 'attention to detail', 'strategic thinking', 'communication', 'data analysis', 'technical knowledge', 'troubleshooting', 'safety awareness'])
+    def test_best_skills(self):
+        self.assertEqual(best_skills(searched_words_3, potential_jobs, resume_skills_5), ['technical knowledge', 'troubleshooting', 'safety awareness', 'compassion', 'medical knowledge', 'attention to detail'])
+        
+      
 
