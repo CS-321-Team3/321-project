@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
 
+
+/**
+ * for now, this file will return a static webpage that we can use to upload files. the idea is to send newly uploaded files to a mongodb server with a field for the username, to link it to each user.
+
+ @return A static webpage with file upload (to upload resumes), a search bar (to search jobs), and a submit button (to submit search query)
+*/
 export default function JobSpanner() {
   const [file, setFile] = useState(null);
 
