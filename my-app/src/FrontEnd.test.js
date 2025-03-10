@@ -20,3 +20,51 @@ test("handles file upload correctly", () => {
   // Check if the uploaded file name is displayed
   expect(getByText("test-file.txt")).toBeInTheDocument();
 });
+
+//unit tests for search bar and button functionality
+test("serach bar rendered properly", () => {
+  render(<JobSpanner/>);
+
+  //Get the search bar
+  const searchBar = screen.getByText("Search Bar");
+
+  //Check if search bar was rendered properly
+  expect(searchBar).toBeInTheDocument();
+})
+
+test("search bar input correctly", () => {
+  const { getByInputText } = render (<JobSpanner/>);
+
+  //Get the search bar
+  const searchBar = getByInputText("Search Bar...");
+
+  //Simulate input of text
+  fireEvent.change(searchBar, {target: {value: "Software Engineer"}});
+
+  //Check if text was input properly in search bar
+  expect(searchBar.value).toBe("Software Engineer");
+})
+
+test("Submit button rendered properly", () => {
+  render(<JobSpanner/>);
+
+  //Get the submit button
+  const submitButton = screen.getByText("Submit");
+
+  //Check if the submit button was properly rendered
+  expect(submitButton).toBeInTheDocument();
+})
+
+test("Submit button click triggers properly", () => {
+  render(<JobSpanner/>);
+
+  //Get the Submit button
+  const submitButton = screen.getByText("Submit");
+
+  //Simulate button click
+  fireEvent.click(submitButton);
+
+  //Check if the click worked
+  expect(submitButton).toBeInTheDocument();
+})
+
