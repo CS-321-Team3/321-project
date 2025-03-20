@@ -1,0 +1,81 @@
+/* components/SearchBar.css */
+.search-container {
+  width: 100%;
+  margin-bottom: 1.5rem;
+  animation: fadeIn 0.5s ease;
+}
+
+.search-input-container {
+  display: flex;
+  width: 100%;
+  height: 45px;
+  position: relative;
+}
+
+.search-input {
+  flex-grow: 1;
+  height: 100%;
+  padding: 0 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 25px;
+  font-size: 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #a970ff;
+  box-shadow: 0 0 0 3px rgba(169, 112, 255, 0.2);
+}
+
+.search-button {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  height: 35px;
+  width: 35px;
+  background-color: #a970ff;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #805ad5;
+  transform: scale(1.05);
+}
+
+.search-button:disabled {
+  background-color: #cbd5e0;
+  cursor: not-allowed;
+}
+
+.search-button.loading {
+  background-color: #3182ce;
+}
+
+.search-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
