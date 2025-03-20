@@ -1,6 +1,6 @@
 #sorter.py © 2025 Sophia Denayer, all rights reserved
 #project: 321 JobSpanner
-#other contributors: Anoop Peterson
+#other contributors: Anoop Peterson, David Ball
 
 #This file is in charge of recommending other skills and technologies based on
 #user's resume, and searched input. Additionally, priorities jobs in order based on 
