@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import JobSpanner from './FrontEnd'; // Import JobSpanner directly
+import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <JobSpanner /> {/* Render JobSpanner directly */}
+  <App></App>
   </React.StrictMode>
 );
 
