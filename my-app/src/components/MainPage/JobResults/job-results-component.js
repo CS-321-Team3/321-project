@@ -38,9 +38,11 @@ const JobResults = ({ results, onPrepare, isLoading }) => {
               <h4 className="company-name">{job.company}</h4>
               <h5 className="position-title">{job.position}</h5>
               <p className="job-location">{job.location}</p>
+              {/* add required/desired skills */}
+              {/* standardize job entry object */}
             </div>
             <button 
-              className="prepare-button"
+              className="prephandleUploadare-button"
               onClick={() => onPrepare(job.id)}
             >
               Prepare!
