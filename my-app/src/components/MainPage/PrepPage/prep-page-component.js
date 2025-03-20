@@ -1,7 +1,7 @@
 // components/PrepPage.js
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import './PrepPage.css';
+import './prep-page.css';
 
 const PrepPage = () => {
   const { jobId } = useParams();

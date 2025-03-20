@@ -1,6 +1,6 @@
 // components/FileUpload.js
 import React, { useState, useRef } from 'react';
-import './FileUpload.css';
+import './file-upload.css'
 
 const FileUpload = () => {
   const [file, setFile] = useState(null);

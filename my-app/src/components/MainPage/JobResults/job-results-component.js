@@ -1,6 +1,6 @@
 // components/JobResults.js
 import React from 'react';
-import './JobResults.css';
+import './job-results.css';
 
 const JobResults = ({ results, onPrepare, isLoading }) => {
   if (isLoading) {
