@@ -29,7 +29,7 @@ const FileUpload = () => {
       console.log(`File "${selectedFile.name}" would be uploaded to database`);
       setUploading(false);
       setUploadSuccess(true);
-      
+      // do the file upload here to mongodb
       // Reset success message after some time
       setTimeout(() => {
         setUploadSuccess(false);
