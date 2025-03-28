@@ -1,6 +1,6 @@
 // src/pages/LoginScreen.js
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { LoginForm } from './LoginForm/login-form-component';
 import { TitleBanner } from './TitleBanner/title-banner-component';
 import { AuthLinks } from './AuthLinks/auth-links-component';
@@ -14,7 +14,7 @@ export default function LoginScreen() {
     password: ''
   });
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleCredentialChange = (e) => {
     const { name, value } = e.target;
