@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import './LoginScreen.css'; // We'll create this CSS file next
+import './LoginScreen.css'; 
+
+// TODO: #4 THIS FILE IS TOO COMPLICATED - SPLIT INTO MULTIPLE SMALLER SEGMENTS
+
 
 function LoginScreen (){
   // State for login form
