@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './LoginScreen.css'; 
+import './login.css'; 
 
 // TODO: #4 THIS FILE IS TOO COMPLICATED - SPLIT INTO MULTIPLE SMALLER SEGMENTS
 

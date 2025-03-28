@@ -1,12 +1,14 @@
 import FileUpload from './FileUpload/file-upload-component';
 import JobResults from './JobResults/job-results-component';
 import SearchBar from './SearchBar/search-bar-component';
-import "./MainApp.css"
+import "./main-page.css"
 import { useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {
   const { userId } = useParams();
-  
+
   console.log(userId);
 
   const [searchResults, setSearchResults] = useState([]);
