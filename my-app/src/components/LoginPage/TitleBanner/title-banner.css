@@ -1,0 +1,23 @@
+/* src/components/AuthBanner.css */
+.title-banner {
+    width: 50%;
+    background-color: #8c53e26b;
+    color: #4501acfa;
+    text-align: center;
+    padding: 1rem;
+    animation: fadeInTop 0.5s ease-out;
+    justify-content: center;
+    justify-items: center;
+    position: top;
+  }
+  
+  @keyframes fadeInTop {
+    from {
+      opacity: 0;
+      transform: translateY(-25px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
