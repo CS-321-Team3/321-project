@@ -5,9 +5,10 @@
 import pdfplumber
 import re
 
-def extract_text_from_pdf(pdf_path):
+def extract_text_from_pdf(pdf_path:str):
     """Extract text from a PDF file."""
     text = ""
+    print(pdf_path)
     with pdfplumber.open(pdf_path) as pdf:
         for page in pdf.pages:
             text += page.extract_text() + "\n"
@@ -39,14 +40,14 @@ def extract_skills_section(text):
     
     return skills
 
-# Example using a sample resume
-pdf_path = "sample_resume.pdf"
+# # Example using a sample resume
+# pdf_path = "sample_resume.pdf"
 
-# Text is first extracted from the pdf
-resume_text = extract_text_from_pdf(pdf_path)
+# # Text is first extracted from the pdf
+# resume_text = extract_text_from_pdf(pdf_path)
 
-# Skills are then extracted from the test
-skills_list = extract_skills_section(resume_text)
+# # Skills are then extracted from the test
+# skills_list = extract_skills_section(resume_text)
 
 
-print({"skills": skills_list})
+# print({"skills": skills_list})
