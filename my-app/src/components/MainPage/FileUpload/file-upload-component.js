@@ -2,6 +2,30 @@
 import React, { useState, useRef } from 'react';
 import './file-upload.css'
 
+// Example React code for uploading a PDF and getting skills
+async function uploadResume(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const response = await fetch("http://localhost:8000/extract-skills/", {
+      method: "POST",
+      body: formData,
+    });
+    
+    if (!response.ok) {
+      throw new Error("Failed to process the resume");
+    }
+    
+    const data = await response.json();
+    console.log("Extracted skills:", data.skills);
+    return data.skills;
+  } catch (error) {
+    console.error("Error:", error);
+    return [];
+  }
+}
+
 const FileUpload = () => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -10,7 +34,7 @@ const FileUpload = () => {
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-    
+    console.log(selectedFile);
     if (selectedFile && selectedFile.type === 'application/pdf') {
       setFile(selectedFile);
       handleUpload(selectedFile);
@@ -29,7 +53,7 @@ const FileUpload = () => {
       console.log(`File "${selectedFile.name}" would be uploaded to database`);
       setUploading(false);
       setUploadSuccess(true);
-      // do the file upload here to mongodb
+      uploadResume(selectedFile);
       // Reset success message after some time
       setTimeout(() => {
         setUploadSuccess(false);
