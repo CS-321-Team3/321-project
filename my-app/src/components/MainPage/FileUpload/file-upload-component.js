@@ -19,10 +19,10 @@ async function uploadResume(file) {
     
     const data = await response.json();
     console.log("Extracted skills:", data.skills);
-    return data.skills;
+    return data;
   } catch (error) {
     console.error("Error:", error);
-    return [];
+    return null;
   }
 }
 

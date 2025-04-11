@@ -1,11 +1,48 @@
 // src/pages/LoginScreen.js
 import React, { useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { LoginForm } from './LoginForm/login-form-component';
 import { TitleBanner } from './TitleBanner/title-banner-component';
 import { AuthLinks } from './AuthLinks/auth-links-component';
 import { GoogleSignInButton } from './GoogleAuth/google-auth-component';
 import './login.css';
+
+async function userauth(username, password) {
+  try {
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("password", password);
+
+    const response = await fetch("http://localhost:8000/login/", {
+      method: "POST",
+      body: formData,
+    });
+    
+    // Handle HTTP errors
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      const errorMessage = errorData.detail || `Error: ${response.status} ${response.statusText}`;
+      throw new Error(errorMessage);
+    }
+    
+    // Parse the response
+    const data = await response.json();
+    
+    // Check if the ID exists in the response
+    if (!data.id) {
+      throw new Error("Invalid response: missing user ID");
+    }
+    
+    // Return just the ID
+    return data.id;
+  } catch (error) {
+    // Re-throw the error to be caught by the caller
+    throw error;
+  }
+}
+
+// Example usage:
+
 
 export default function LoginScreen() {
   let attempts = 0;
@@ -14,7 +51,7 @@ export default function LoginScreen() {
     password: ''
   });
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleCredentialChange = (e) => {
     const { name, value } = e.target;
@@ -24,12 +61,20 @@ export default function LoginScreen() {
     }));
   };
 
-  const handleSignIn = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
-    // Authentication logic would go here - refer to secure sql server
-    attempts ++;
-    console.log('Sign in attempt: ', attempts);
-    // navigate('/user/1'); // as a stub
+    // Authentication logic: 1) send username and password to fastapi backend. 2) backend calls sqlite query. 3) backend either returns id or None. 
+    // requires the sql db to have id as primary key, username as a string, password as a hash
+        
+    try {
+      const userId = await userauth("username", "password");
+      console.log("Login successful, user ID:", userId);
+      navigate(`users/${userId}`);
+    } catch (error) {
+      attempts ++;
+      console.log("attempts: ", attempts);
+      console.error("Login failed:", error.message);
+    }
   };
 
   return (
