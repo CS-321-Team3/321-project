@@ -1,10 +1,11 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, Form, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import pdfplumber
 import re
 import os
 from typing import List
 from pydantic import BaseModel
+import sqlite3 as sql
 
 # Import functions from your existing code
 from pdf_parser import extract_text_from_pdf, extract_skills_section
@@ -22,6 +23,34 @@ app.add_middleware(
 
 class SkillsResponse(BaseModel):
     skills: List[str]
+
+db = sql.connect('credentials.db')
+
+@app.post("/login/")
+async def userauth(username:str = Form(), password:str = Form()):
+    """
+    Attempts to authenticate the user.
+    Parameters:
+        String: username
+        String: password
+
+    Returns:
+        int: user id
+    
+    Throws:
+        HTTPException if there is not exactly 1 user entry or if passwords don't match.
+    """
+    
+    rows = db.execute("SELECT ID, PWD FROM CREDENTIALS WHERE UNAME=(?)", [username]).fetchall()
+    
+    if len(rows) > 1:
+        raise HTTPException(status_code=500, detail="Multiple entries for same username combos")
+    if len(rows) < 1:
+        raise HTTPException(status_code=401, detail="No matching users")
+    if rows[0][1] != password:
+        raise RuntimeError(status_code=400, detail="Password does not match")
+    
+    return {"id":rows[0][0]}
 
 @app.post("/extract-skills/", response_model=SkillsResponse)
 async def extract_skills(file: UploadFile = File(...)):
