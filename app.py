@@ -1,17 +1,17 @@
 from fastapi import FastAPI, Form, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-import pdfplumber
-import re
-import os
-from typing import List
+from typing import List, Annotated
 from pydantic import BaseModel
 import sqlite3 as sql
+import logging
 
 # Import functions from your existing code
 from pdf_parser import extract_text_from_pdf, extract_skills_section
 
 app = FastAPI(title="JobSpanner API")
 
+logger = logging.getLogger('uvicorn.error')
+logger.setLevel(logging.DEBUG)
 # Configure CORS to allow requests from your React frontend
 app.add_middleware(
     CORSMiddleware,
@@ -24,10 +24,14 @@ app.add_middleware(
 class SkillsResponse(BaseModel):
     skills: List[str]
 
+class UserAuth(BaseModel):
+    username: str
+    password: str
+
 db = sql.connect('credentials.db')
 
 @app.post("/login/")
-async def userauth(username:str = Form(), password:str = Form()):
+async def userauth(data: Annotated[UserAuth, Form()]):
     """
     Attempts to authenticate the user.
     Parameters:
@@ -40,9 +44,10 @@ async def userauth(username:str = Form(), password:str = Form()):
     Throws:
         HTTPException if there is not exactly 1 user entry or if passwords don't match.
     """
-    
+    logger.debug(data)
     rows = db.execute("SELECT ID, PWD FROM CREDENTIALS WHERE UNAME=(?)", [username]).fetchall()
-    
+    logger.debug(rows)
+
     if len(rows) > 1:
         raise HTTPException(status_code=500, detail="Multiple entries for same username combos")
     if len(rows) < 1:

@@ -1,10 +1,10 @@
-# import sqlite3 as sql
+import sqlite3 as sql
 
 """
 This file is just like a sbx env for people to test their sqlite changes with
 """
 
-# db = sql.connect('321-project-pdf-parser/credentials.db')
+db = sql.connect('321-project-pdf-parser/credentials.db')
 
 # db.execute("""
 # CREATE TABLE CREDENTIALS
@@ -22,12 +22,9 @@ This file is just like a sbx env for people to test their sqlite changes with
 
 # db.commit()
 
-# cursor = db.execute(""" 
-# SELECT ID, UNAME, PWD, EMAIL from CREDENTIALS 
-# WHERE UNAME='apeter40' AND PWD='testPassword123!';
-# """)
+cursor = db.execute("SELECT ID, UNAME, PWD, EMAIL from CREDENTIALS  WHERE UNAME=(?);", ['apeter40']).fetchall()
 
-# print(cursor.fetchall())
+print(cursor)
 
 # for row in cursor:
 #     print("***************")
