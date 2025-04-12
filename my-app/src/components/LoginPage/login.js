@@ -67,9 +67,9 @@ export default function LoginScreen() {
     // requires the sql db to have id as primary key, username as a string, password as a hash
         
     try {
-      const userId = await userauth("username", "password");
+      const userId = await userauth(credentials['username'], credentials['password']);
       console.log("Login successful, user ID:", userId);
-      navigate(`users/${userId}`);
+      navigate(`user/${userId}`);
     } catch (error) {
       attempts ++;
       console.log("attempts: ", attempts);
