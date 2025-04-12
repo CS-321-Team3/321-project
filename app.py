@@ -45,15 +45,15 @@ async def userauth(data: Annotated[UserAuth, Form()]):
         HTTPException if there is not exactly 1 user entry or if passwords don't match.
     """
     logger.debug(data)
-    rows = db.execute("SELECT ID, PWD FROM CREDENTIALS WHERE UNAME=(?)", [username]).fetchall()
+    rows = db.execute("SELECT ID, PWD FROM CREDENTIALS WHERE UNAME=(?)", [data.username]).fetchall()
     logger.debug(rows)
 
     if len(rows) > 1:
         raise HTTPException(status_code=500, detail="Multiple entries for same username combos")
     if len(rows) < 1:
         raise HTTPException(status_code=401, detail="No matching users")
-    if rows[0][1] != password:
-        raise RuntimeError(status_code=400, detail="Password does not match")
+    if rows[0][1] != data.password:
+        raise HTTPException(status_code=400, detail="Password does not match")
     
     return {"id":rows[0][0]}
 
