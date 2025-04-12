@@ -1,5 +1,5 @@
 import React from "react";
-import '../login.css'
+import './account-creation.css'
 
 export default function AccountCreation() {
 
