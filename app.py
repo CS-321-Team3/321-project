@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Form, UploadFile, File, HTTPException
+from fastapi import FastAPI, Form, UploadFile, File, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Annotated
 from pydantic import BaseModel
@@ -28,6 +28,11 @@ class UserAuth(BaseModel):
     username: str
     password: str
 
+class PasswordReset(BaseModel):
+    found_username: bool
+    username:       str
+    password:       str | None
+
 db = sql.connect('credentials.db')
 
 @app.post("/login/")
@@ -35,8 +40,8 @@ async def userauth(data: Annotated[UserAuth, Form()]):
     """
     Attempts to authenticate the user.
     Parameters:
-        String: username
-        String: password
+        str: username
+        str: password
 
     Returns:
         int: user id
@@ -57,6 +62,28 @@ async def userauth(data: Annotated[UserAuth, Form()]):
     
     return {"id":rows[0][0]}
 
+@app.post('/password-reset/')
+async def query(data: Annotated[PasswordReset, Request]):
+    if data.found_username:
+        if data.password is None:
+            raise HTTPException(status_code=401, detail="Missing password");
+
+        response = db.execute('UPDATE CREDENTIALS SET PWD=(?) WHERE UNAME=(?)', [data.password, data.username])
+
+        return response
+    else:
+        if data.username is None or data.password is not None:
+            raise HTTPException(status_code=401, detail="Either username is missing or password is not supposed to be there")
+        
+        rows = db.execute('SELECT UNAME FROM CREDENTIALS WHERE UNAME=(?)', [data.username]).fetchall()
+        logger.debug(rows)
+        if len(rows) > 1:
+            raise HTTPException(status_code=500, detail="Multiple entries for same username combos")
+        if len(rows) < 1:
+            raise HTTPException(status_code=401, detail="No matching users")
+
+        return rows[0][0]
+    
 @app.post("/extract-skills/", response_model=SkillsResponse)
 async def extract_skills(file: UploadFile = File(...)):
     """
