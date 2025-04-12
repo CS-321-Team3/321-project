@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import './password-reset.css'
 
 async function querySQL(body) {
   console.log("querying now: ", body)
@@ -96,13 +97,15 @@ export default function PasswordReset() {
   if (foundUsername) {
       return (
         // password form
+        <div className="form-container">
+          <h1 className="header">Reset Password</h1>
           <form onSubmit={handleSubmit} className="login-form"> 
               <div className="password-reset">
                   <div className="form-group">
                       <input
                       type="password"
                       name="password"
-                      placeholder="Password"
+                      placeholder="New Password"
                       value={credentials.password}
                       onChange={handleCredentialChange}
                       required
@@ -113,11 +116,14 @@ export default function PasswordReset() {
                 Reset Password
               </button>
           </form>
+        </div>
       );    
   } else {
       return (
         // username form
-          <form onSubmit={handleSubmit}> 
+        <div className="form-container">
+          <h1 className="header">Reset Password</h1>
+          <form onSubmit={handleSubmit} className="login-form"> 
               <div className="username-reset">
                   <div className="form-group">
                       <input
@@ -134,6 +140,7 @@ export default function PasswordReset() {
                 Submit
               </button>
           </form>
+        </div>
       );      
   }
     
