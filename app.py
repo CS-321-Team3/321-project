@@ -12,10 +12,10 @@ app = FastAPI(title="JobSpanner API")
 
 logger = logging.getLogger('uvicorn.error')
 logger.setLevel(logging.DEBUG)
-# Configure CORS to allow requests from your React frontend
+# Configure CORS to allow requests from React frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Update with your React app's URL
+    allow_origins=["http://localhost:3000"], # Update with working URL if you ever publish app, or React dev URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -27,6 +27,11 @@ class SkillsResponse(BaseModel):
 class UserAuth(BaseModel):
     username: str
     password: str
+
+class SignUpForm(BaseModel):
+    username: str
+    password: str
+    email:    str
 
 class PasswordReset(BaseModel):
     found_username: bool
@@ -62,6 +67,17 @@ async def userauth(data: Annotated[UserAuth, Form()]):
     
     return {"id":rows[0][0]}
 
+@app.post('/signup/')
+async def signup(data: Annotated[SignUpForm, Form()]):
+    try:
+        logger.debug(data)
+        db.execute("INSERT INTO CREDENTIALS (UNAME, PWD, EMAIL) VALUES ((?), (?), (?))", [data.username, data.password, data.email]).fetchall()
+        db.commit()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Exception: {e}");
+    
+    return {"status": 200}
+
 @app.post('/password-reset/')
 async def query(data: Annotated[PasswordReset, Request]):
     if data.found_username:
@@ -69,7 +85,7 @@ async def query(data: Annotated[PasswordReset, Request]):
             raise HTTPException(status_code=401, detail="Missing password");
 
         response = db.execute('UPDATE CREDENTIALS SET PWD=(?) WHERE UNAME=(?)', [data.password, data.username])
-
+        db.commit()
         return response
     else:
         if data.username is None or data.password is not None:
