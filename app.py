@@ -101,7 +101,7 @@ async def query(data: Annotated[PasswordReset, Request]):
         return rows[0][0]
     
 @app.post("/extract-skills/", response_model=SkillsResponse)
-async def extract_skills(file: UploadFile = File(...)):
+async def extract_skills(file: Annotated[UploadFile, Form()]):
     """
     Extract skills from an uploaded PDF resume.
     
