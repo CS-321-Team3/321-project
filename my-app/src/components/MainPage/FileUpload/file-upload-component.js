@@ -49,16 +49,15 @@ const FileUpload = () => {
     setUploadSuccess(false);
     
     // Simulate upload process
+    console.log(`File "${selectedFile.name}" would be uploaded to database`);
+    setUploading(false);
+    setUploadSuccess(true);
+    uploadResume(selectedFile);
+    setFile(null);
+    // Reset success message after some time
     setTimeout(() => {
-      console.log(`File "${selectedFile.name}" would be uploaded to database`);
-      setUploading(false);
-      setUploadSuccess(true);
-      uploadResume(selectedFile);
-      // Reset success message after some time
-      setTimeout(() => {
-        setUploadSuccess(false);
-      }, 3000);
-    }, 2000);
+      setUploadSuccess(false);
+    }, 3000);
   };
 
   const handleButtonClick = () => {
