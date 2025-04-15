@@ -1,9 +1,16 @@
-import FileUpload from './components/MainPage/FileUpload/file-upload-component';
-import JobResults from './components/MainPage/JobResults/job-results-component';
-import SearchBar from './components/MainPage/SearchBar/search-bar-component';
-import "./MainApp.css"
+import FileUpload from './FileUpload/file-upload-component';
+import JobResults from './JobResults/job-results-component';
+import SearchBar from './SearchBar/search-bar-component';
+import "./main-page.css"
+import { useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function MainPage() {
+const MainPage = () => {
+  const { userId } = useParams();
+
+  console.log(userId);
+
   const [searchResults, setSearchResults] = useState([]);
   const [hasSearched, setHasSearched] = useState(false);
   const [isLoading, setIsLoading] = useState(false);

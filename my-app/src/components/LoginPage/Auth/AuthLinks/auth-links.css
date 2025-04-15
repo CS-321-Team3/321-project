@@ -1,0 +1,18 @@
+/* src/components/AuthLinks.css */
+.auth-links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+  }
+  
+  .auth-link {
+    color: #a970ff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+  }
+  
+  .auth-link:hover {
+    color: #805ad5;
+    text-decoration: underline;
+  }
