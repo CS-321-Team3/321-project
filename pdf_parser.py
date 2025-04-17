@@ -68,6 +68,21 @@ def s3_upload(path_to_file, name_of_file, bucket_name='jobspannerresumes', regio
     except ClientError as e:
         print(f"❌ AWS error: {e}")
 
+def s3_list(bucket_name = 'jobspannerresumes', region='us-east-1'):
+    """
+    This function lists all of the resumes currently in the s3 bucket and when they were last modified.
+    """
+    s3 = boto3.client('s3', region_name=region)
+    # List objects in the bucket
+    response = s3.list_objects_v2(Bucket=bucket_name)
+
+    # Check if the bucket has any objects
+    if 'Contents' in response:
+        # Print the file names (keys) in the bucket
+        for obj in response['Contents']:
+            print(f"File: {obj['Key']} - Last Modified: {obj['LastModified']}")
+    else:
+        print("No files found in the bucket.")
 
 # Example using a sample resume
 pdf_path = "sample_resume.pdf"
@@ -78,6 +93,6 @@ pdf_path = "sample_resume.pdf"
 # # Skills are then extracted from the test
 # skills_list = extract_skills_section(resume_text)
 
-s3_upload(pdf_path, "test_resume")
-
+s3_upload(pdf_path, "test_resume_IAM") #adds the pdf with the name "test_resume_IAM"
+s3_list() #lists all of the objects currently in the bucket
 # print({"skills": skills_list})
