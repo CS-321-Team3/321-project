@@ -9,6 +9,13 @@
 #Team members: add any documentation notes for changes and etc. Thank you!
 # - This document needs to be connected later on to data base and parsed info from
 #   inserted resume
+# - 221: #not in, if in, it would be curr skills
+        #NOTE YOU CAN VALIDATE THIS WORKS BY CHANGING TO 'in'^
+        #cant work yet because we need database
+from ics import Calendar, Event
+from datetime import time
+from datetime import datetime, timedelta, date
+from zoneinfo import ZoneInfo
 
 #jobs that could pop up
 potential_jobs = {
@@ -42,6 +49,21 @@ potential_jobs = {
     }
     
 }
+#person's inputted free time (user will input what hours they are free at
+#this will be converted into military time
+curr_freetime = {
+    "Monday" : {5, 6, 11, 16},
+    "Tuesday": {8, 9, 13, 3},
+    "Wednesdy": {5, 7, 20, 21},
+    "Thursday": {4, 5, 6, 14, 15},
+    "Friday": {3, 4},
+    "Saturday" : {0},
+    "Sunday" : {0}
+}
+
+#how long each skill takes to learn
+skill_time = {"python": 3, "sociable": 1, "kind": 2}
+
 #searched words in search bar
 searched_words = ["job", "Computer Science", "internship", "intern", "aws", "google"]
 searched_words_2 = ["job", "teaching", "internship", "intern", "elementary school"]
@@ -167,7 +189,135 @@ def best_skills(searched_words, potential_jobs, resume_skills):
             we_saw.add(value)
     print(sorted_list)
     return sorted_list
+
+#group the hours together 
+def group_hours(hours):
+    hours = list(hours)
+    hours.sort()
+    time_block = []
+    #check if there is an hour list
+    if not hours:
+        return time_block
+    #create start and end
+    start = hours[0]
+    end = hours[0]
+    #check the hour in hours
+    for hour in hours[1:]:
+        #check to see if the new hour is end + 1
+        #if so, then we can make it part of this block
+        if hour == end + 1:
+            end = hour
+        else:
+           time_block.append((start, end)) #make a new block
+           start = hour
+           end = hour
+    #add in the last time block
+    time_block.append((start, end))
+    return time_block
+        
+#use persons schedule and skills needed to develop
+def make_schedule(searched_words, potential_jobs, resume_skills, curr_freetime, skill_time):
+    needed_skills = best_skills(searched_words, potential_jobs, resume_skills)
+    #first check to see if needed skills are on resume
+    study_skills = []
+    #dict with day, time, skill
+    final_schedule = {}
+    #go through skills in the needed
+    for skill in needed_skills:
+        #see if the needed skill is in the resume
+        if skill not in resume_skills: #not in, if in, it would be curr skills //NOT IN
+        #NOTE YOU CAN VALIDATE THIS WORKS BY CHANGING TO 'in'^
+        #cnat work yet because we need database
+            #add the skill to the actual needed skill
+            study_skills.append(skill)
+    #find how many hours there are in each day
+    for day, hours in curr_freetime.items():
+        #group the hours into time blocks
+        time_block = group_hours(hours)
+        #go through each time block
+        for block in time_block:
+            start, end = block
+            #create block length
+            block_len = end - start + 1
+            #go through each skill and itme in skill time
+            for skill, time in skill_time.items():
+                #see if block len is equal to time and skill is in study skills
+                if skill in study_skills and block_len == time:
+                    #make string
+                    time_ran = f"{start}-{end+1}"
+                    #if not made, make it
+                    if day not in final_schedule:
+                        final_schedule[day] = []
+                    #append time ran and skill
+                    final_schedule[day].append((time_ran, skill)) 
+                    #remove the skill
+                    study_skills.remove(skill)         
+                else:
+                    continue
+                break
+    print(final_schedule)
+    event_data(final_schedule)
+    return(final_schedule)
     
+def event_data(final_schedule):
+    #create a new calendar
+    calendar = Calendar()
+    #go through keys and valus in the schedule
+    for key, val in final_schedule.items():
+        #get the day
+        day = date_of_day(key)
+        #go through the skills and timez in val
+        for the_time, skill in val:
+            #create event
+            event = Event()
+            #set event name
+            event.name = skill
+            #check to make sure that we have full string
+            if "-" in the_time and len(the_time.split("-")) == 2:
+                #split to get start and end
+                start, end = map(int, the_time.split("-"))
+                #set begin time with NY time
+                event.begin = datetime.combine(day, time(start)).replace(tzinfo = ZoneInfo("America/New_York"))
+                #find how many hours from end - start
+                hour = end - start
+                #set event duration
+                event.duration = timedelta(hours = hour)
+                #add the event to the cal
+                calendar.events.add(event)
+    #open the fil and write
+    with open("calendar_schedule.ics", "w") as file:
+        file.writelines(calendar)
+    #opent the file and read
+    with open("calendar_schedule.ics", "r") as file:
+        imported_calendar = Calendar(file.read())
+    
+   # The code below is good for testing!
+   # for event in imported_calendar.events:
+   #     print("Event Name:", event.name)
+   #     print("Start Time:", event.begin)
+    #    print("End Time:", event.end)
+    #    print("Duration:", event.duration)
+    #    print("-" * 40)
+    #print(event)
+    return event
+    
+#date of day's code originated from ChatGPT code, but was modified
+def date_of_day(day):
+    #day options
+    wkdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    #curr day
+    today = datetime.today()
+    tdy_wday = today.weekday()
+    #finding day we want
+    targ_wday = wkdays.index(day)
+    #get to the target day
+    days_infront = (targ_wday - tdy_wday + 6) % 7 #need to check this line!! (during testing)
+    if days_infront == 0:
+        days_infront == 6
+    next_day = today + timedelta(days = days_infront)
+    final_day = next_day.date()
+    return final_day
+
 #tests 1st
 search_jobs(searched_words, potential_jobs)
 #tests 2nd 
@@ -176,6 +326,8 @@ search_skills(searched_words, potential_jobs)
 best_jobs(searched_words, potential_jobs, resume_skills)
 #tests 4th
 best_skills(searched_words, potential_jobs, resume_skills)
+#tests 5th
+make_schedule(searched_words, potential_jobs, resume_skills, curr_freetime, skill_time)
 
 # unit tests
 import unittest
