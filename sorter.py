@@ -21,31 +21,31 @@ from zoneinfo import ZoneInfo
 potential_jobs = {
     "Amazon SDE" : {
         "words": ["aws", "computer"], 
-        "skills": ["coding", "sociable", "hardworking", "python"]
+        "skills": ["coding", "sociable", "hardworking", "python", "eating"]
     },
     "Google intern" : {
         "words": ["internship", "google"],
-        "skills": ["kind", "coding"]
+        "skills": ["kind", "coding", "quick", "self-driver", "cool"]
     },
     "Elementary School Teacher" : {
         "words": ["teaching", "elementary school"],
-        "skills": ["kind", "teaching", "sociable"]
+        "skills": ["kind", "teaching", "sociable", "self-driver", "students"]
     },
     "Nurse": {
         "words": ["healthcare", "hospital"],
-        "skills": ["compassion", "medical knowledge", "attention to detail"]
+        "skills": ["compassion", "medical knowledge", "attention to detail", "self-driver", "bed-side manner"]
     },
     "Graphic Designer": {
         "words": ["design", "creative"],
-        "skills": ["creativity", "Adobe Photoshop", "visual communication"]
+        "skills": ["creativity", "Adobe Photoshop", "visual communication", "self-driver", "creative"]
     },
     "Electrician": {
         "words": ["wiring", "electrical work"],
-        "skills": ["technical knowledge", "troubleshooting", "safety awareness"]
+        "skills": ["technical knowledge", "troubleshooting", "safety awareness", "self-driver", "strong"]
     },
     "Marketing Manager": {
         "words": ["advertising", "branding"],
-        "skills": ["strategic thinking", "communication", "data analysis"]
+        "skills": ["strategic thinking", "communication", "data analysis", "self-driver", "marketing"]
     }
     
 }
@@ -62,7 +62,7 @@ curr_freetime = {
 }
 
 #how long each skill takes to learn
-skill_time = {"python": 3, "sociable": 1, "kind": 2}
+skill_time = {"python": 3, "sociable": 1, "kind": 2, "coding": 4, "hardworking": 1, "eating": 3, "quick": 1, "self-driver": 2, "cool": 1, "students": 3, "bed-side manner": 2, "strong": 3, "creative": 2, "marketing": 1}
 
 #searched words in search bar
 searched_words = ["job", "Computer Science", "internship", "intern", "aws", "google"]
@@ -71,6 +71,7 @@ searched_words_3 = ["healthcare", "hospital"]
 searched_words_4 = ["design", "creative"]
 searched_words_5 = ["wiring", "electrical work", "creative"]
 searched_words_6 = ["wiring", "advertising", "branding"]
+searched_words_7 = ["teaching"]
 #skills in inserted resume
 resume_skills = ["hardworking", "sociable", "kind", "coding", "python"]
 resume_skills_2 = ["hardworking", "sociable", "kind", "coding", "python", "teaching"]
@@ -78,9 +79,12 @@ resume_skills_3 = ["compassion", "medical knowledge", "attention to detail"]
 resume_skills_4 = ["creativity", "Adobe Photoshop", "visual communication"]
 resume_skills_5 = ["technical knowledge", "troubleshooting", "safety awareness"]
 resume_skills_6 = ["strategic thinking", "communication", "data analysis"]
+resume_skills_7 = ["teaching"]
 
 #finds best jobs based on searched words
 def search_jobs(searched_words, potential_jobs):
+    #print("searched words")
+    #print(searched_words)
     #make new dict, and add counts and jobs
     priority = {}
     #go through the groups in the dict
@@ -99,7 +103,7 @@ def search_jobs(searched_words, potential_jobs):
     #function below sorts dict from highest val to lowest val
     sort_dic = dict(sorted(priority.items(), key = lambda item: item[1], reverse = True))
     #prints out for testing right now
-    print(sort_dic)
+    #print(sort_dic)
     #return the value
     return sort_dic
     
@@ -129,7 +133,7 @@ def search_skills(searched_words, potential_jobs):
             sorted_list.append(value)
             #add it to our seen values
             we_saw.add(value)
-    print(sorted_list)
+    #print(sorted_list)
     return sorted_list
                 
 #finds jobs based on resume skills and on data inserted into search
@@ -159,7 +163,7 @@ def best_jobs(searched_words, potential_jobs, resume_skills):
             priority[k] = v 
     #sorts which job has priority based on resume
     sort_dic = dict(sorted(priority.items(), key = lambda item: item[1], reverse = True))
-    print(sort_dic)
+    #print(sort_dic)
     return sort_dic
     
 #finds the most important skills required based on resume skills (outputs as list/arr)
@@ -187,7 +191,7 @@ def best_skills(searched_words, potential_jobs, resume_skills):
             sorted_list.append(value)
              #add it to our seen values
             we_saw.add(value)
-    print(sorted_list)
+    #print(sorted_list)
     return sorted_list
 
 #group the hours together 
@@ -251,11 +255,13 @@ def make_schedule(searched_words, potential_jobs, resume_skills, curr_freetime, 
                     #append time ran and skill
                     final_schedule[day].append((time_ran, skill)) 
                     #remove the skill
-                    study_skills.remove(skill)         
+                    study_skills.remove(skill)
+                    #print(skill)         
                 else:
                     continue
                 break
-    print(final_schedule)
+    #print("FINAL SCHEDULE: ")
+    #print(final_schedule)
     event_data(final_schedule)
     return(final_schedule)
     
@@ -299,6 +305,7 @@ def event_data(final_schedule):
     #    print("Duration:", event.duration)
     #    print("-" * 40)
     #print(event)
+    
     return event
     
 #date of day's code originated from ChatGPT code, but was modified
@@ -319,16 +326,19 @@ def date_of_day(day):
     return final_day
 
 #tests 1st
-search_jobs(searched_words, potential_jobs)
+#search_jobs(searched_words, potential_jobs)
 #tests 2nd 
-search_skills(searched_words, potential_jobs)
+#search_skills(searched_words, potential_jobs)
 #tests 3rd
-best_jobs(searched_words, potential_jobs, resume_skills)
+#best_jobs(searched_words, potential_jobs, resume_skills)
 #tests 4th
-best_skills(searched_words, potential_jobs, resume_skills)
+#best_skills(searched_words, potential_jobs, resume_skills)
 #tests 5th
-make_schedule(searched_words, potential_jobs, resume_skills, curr_freetime, skill_time)
-
+#make_schedule(searched_words, potential_jobs, resume_skills, curr_freetime, skill_time)
+#tests 6ht
+#event_data({'Monday': [('5-7', 'self-driver'), ('11-12', 'quick'), ('16-17', 'cool')], 'Thursday': [('4-7', 'eating')]})
+    #note, we can not do unit tests on iCal so I manually checked
+    
 # unit tests
 import unittest
 
@@ -344,13 +354,13 @@ class TestSorter(unittest.TestCase):
     def test_jobs_5(self):
         self.assertEqual(search_jobs(searched_words_4, potential_jobs), {'Graphic Designer': 2})
     def test_skills(self):
-        self.assertEqual(search_skills(searched_words, potential_jobs), ['kind', 'coding', 'sociable', 'hardworking', 'python'])
+        self.assertEqual(search_skills(searched_words, potential_jobs), ['kind', 'coding', 'quick', 'self-driver', 'cool', 'sociable', 'hardworking', 'python', 'eating'])
     def test_skills_2(self):
-        self.assertEqual(search_skills(searched_words_2, potential_jobs), ['kind', 'teaching', 'sociable', 'coding'])
+        self.assertEqual(search_skills(searched_words_2, potential_jobs), ['kind', 'teaching', 'sociable', 'self-driver', 'students', 'coding', 'quick', 'cool'])
     def test_skills_3(self):
-        self.assertEqual(search_skills(searched_words_4, potential_jobs), ['creativity', 'Adobe Photoshop', 'visual communication'])
+        self.assertEqual(search_skills(searched_words_4, potential_jobs), ['creativity', 'Adobe Photoshop', 'visual communication', 'self-driver', 'creative'])
     def test_skills_4(self):
-        self.assertEqual(search_skills(searched_words_3, potential_jobs), ['compassion', 'medical knowledge', 'attention to detail'])
+        self.assertEqual(search_skills(searched_words_3, potential_jobs), ['compassion', 'medical knowledge', 'attention to detail', 'self-driver', 'bed-side manner'])
 
     def test_best_jobs(self):
         self.assertEqual(best_jobs(searched_words, potential_jobs, resume_skills), {'Amazon SDE': 5, 'Google intern': 4, 'Elementary School Teacher' : 2})
@@ -367,7 +377,30 @@ class TestSorter(unittest.TestCase):
     def test_best_skills(self):
         self.assertEqual(best_skills(searched_words_6, potential_jobs, resume_skills_3), ['compassion', 'medical knowledge', 'attention to detail', 'strategic thinking', 'communication', 'data analysis', 'technical knowledge', 'troubleshooting', 'safety awareness'])
     def test_best_skills(self):
-        self.assertEqual(best_skills(searched_words_3, potential_jobs, resume_skills_5), ['technical knowledge', 'troubleshooting', 'safety awareness', 'compassion', 'medical knowledge', 'attention to detail'])
-        
+        self.assertEqual(best_skills(searched_words_3, potential_jobs, resume_skills_5), ['technical knowledge', 'troubleshooting', 'safety awareness', 'self-driver', 'strong', 'compassion', 'medical knowledge', 'attention to detail', 'bed-side manner'])
+    
+    def test_make_schedule(self):
+        self.assertEqual(make_schedule(searched_words, potential_jobs, resume_skills, curr_freetime, skill_time), {'Monday': [('5-7', 'self-driver'), ('11-12', 'quick'), ('16-17', 'cool')], 'Thursday': [('4-7', 'eating')]})
+    def test_make_schedule_2(self):
+        self.assertEqual(make_schedule(searched_words_7, potential_jobs, resume_skills_7, curr_freetime, skill_time), {'Monday': [('5-7', 'kind'), ('11-12', 'sociable')], 'Tuesday': [('8-10', 'self-driver')], 'Thursday': [('4-7', 'students')]})
+    def test_make_schedule_1(self):
+        self.assertEqual(make_schedule(searched_words_2, potential_jobs, resume_skills_5, curr_freetime, skill_time), {'Monday': [('5-7', 'kind'), ('11-12', 'sociable'), ('16-17', 'quick')], 'Thursday': [('4-7', 'students')], 'Tuesday': [('3-4', 'cool'), ('8-10', 'self-driver')]})
+    def test_make_schedule_3(self):
+        self.assertEqual(make_schedule(searched_words_5, potential_jobs, resume_skills_5, curr_freetime, skill_time), {'Monday': [('5-7', 'self-driver')], 'Thursday': [('4-7', 'strong')], 'Tuesday': [('8-10', 'creative')]})
+    def test_make_schedule_4(self):
+        self.assertEqual(make_schedule(searched_words_6, potential_jobs, resume_skills_6, curr_freetime, skill_time), {'Monday': [('5-7', 'self-driver'), ('11-12', 'marketing')], 'Thursday': [('4-7', 'strong')]})
+    def test_make_schedule(self):
+        self.assertEqual(make_schedule(searched_words, potential_jobs, resume_skills, curr_freetime, skill_time), {'Monday': [('5-7', 'self-driver'), ('11-12', 'quick'), ('16-17', 'cool')], 'Thursday': [('4-7', 'eating')]})
+    def test_make_schedule(self):
+        self.assertEqual(make_schedule(searched_words_2, potential_jobs, resume_skills_2, curr_freetime, skill_time), {'Monday': [('5-7', 'self-driver'), ('11-12', 'quick'), ('16-17', 'cool')], 'Thursday': [('4-7', 'eating')]})
+    def test_make_schedule(self):
+        self.assertEqual(make_schedule(searched_words_6, potential_jobs, resume_skills_3, curr_freetime, skill_time), {'Monday': [('5-7', 'self-driver'), ('11-12', 'marketing')], 'Thursday': [('4-7', 'strong')], 'Tuesday': [('8-10', 'bed-side manner')]})
+    def test_make_schedule(self):
+        self.assertEqual(make_schedule(searched_words_3, potential_jobs, resume_skills_5, curr_freetime, skill_time), {'Monday': [('5-7', 'self-driver')], 'Thursday': [('4-7', 'strong')], 'Tuesday': [('8-10', 'bed-side manner')]})
+  
+if __name__ == '__main__':
+    unittest.main()
+
+       
       
 
