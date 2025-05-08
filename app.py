@@ -116,13 +116,12 @@ async def extract_skills(file: Annotated[UploadFile, Form()]):
         raise HTTPException(status_code=400, detail="Uploaded file must be a PDF")
     
     try:
-               
+        contents = await file.read()
         # Extract text from the PDF
-        resume_text = extract_text_from_pdf(file)
-        
+        resume_text = extract_text_from_pdf(contents)
         # Extract skills from the text
         skills_list = extract_skills_section(resume_text)
-                
+
         # Return the skills list as JSON
         return {"skills": skills_list}
     

@@ -2,18 +2,19 @@
 #Contributors: Toufeeq Sharieff
 #Parsing of uploaded PDF
 
+from io import BytesIO
 import pdfplumber
 import re
 import boto3
 from botocore.exceptions import NoCredentialsError, ClientError
 
-def extract_text_from_pdf(pdf_path:str):
+def extract_text_from_pdf(pdf_path:bytes):
     """Extract text from a PDF file."""
     text = ""
-    print(pdf_path)
-    with pdfplumber.open(pdf_path) as pdf:
-        for page in pdf.pages:
-            text += page.extract_text() + "\n"
+    with BytesIO(pdf_path) as file:            
+        with pdfplumber.open(file) as pdf:
+            for page in pdf.pages:
+                text += page.extract_text() + "\n"
     return text
 
 def extract_skills_section(text):
@@ -93,6 +94,6 @@ pdf_path = "sample_resume.pdf"
 # # Skills are then extracted from the test
 # skills_list = extract_skills_section(resume_text)
 
-s3_upload(pdf_path, "test_resume_IAM") #adds the pdf with the name "test_resume_IAM"
-s3_list() #lists all of the objects currently in the bucket
+# s3_upload(pdf_path, "test_resume_IAM") #adds the pdf with the name "test_resume_IAM"
+# s3_list() #lists all of the objects currently in the bucket
 # print({"skills": skills_list})
