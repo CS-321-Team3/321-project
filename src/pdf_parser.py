@@ -1,5 +1,5 @@
 #Project: JobSpanner
-#Contributors: Toufeeq Sharieff
+#Contributors: Toufeeq Sharieff, Ayesha Kazi
 #Parsing of uploaded PDF
 
 from io import BytesIO
@@ -7,6 +7,8 @@ import pdfplumber
 import re
 import boto3
 from botocore.exceptions import NoCredentialsError, ClientError
+from pymongo import MongoClient
+from pymongo.server_api import ServerApi
 
 def extract_text_from_pdf(pdf_path:bytes):
     """Extract text from a PDF file."""
@@ -85,8 +87,19 @@ def s3_list(bucket_name = 'jobspannerresumes', region='us-east-1'):
     else:
         print("No files found in the bucket.")
 
+def insert_resume_to_mongodb(resume_data):
+    uri = "mongodb+srv://AyeshaK:syDHLige6B6pXi1w@cluster0.w8q01.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    client = MongoClient(uri, server_api=ServerApi('1'))
+    db = client["JobSpanner"]
+    collection = db["resumes"]
+    result = collection.insert_one(resume_data)
+    try:
+        print(f"✅ Inserted into MongoDB with ID: {result.inserted_id}")
+    except Exception as e:
+        print(f"❌ MongoDB insert error: {e}")
+
 # Example using a sample resume
-pdf_path = "sample_resume.pdf"
+# pdf_path = "sample_resume.pdf"
 
 # # Text is first extracted from the pdf
 # resume_text = extract_text_from_pdf(pdf_path)

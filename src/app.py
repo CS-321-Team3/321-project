@@ -38,7 +38,10 @@ class PasswordReset(BaseModel):
     username:       str
     password:       str | None
 
-db = sql.connect('credentials.db')
+class JobQuery(BaseModel):
+    query: str
+
+db = sql.connect('../data/credentials.db')
 
 @app.post("/login/")
 async def userauth(data: Annotated[UserAuth, Form()]):
@@ -127,6 +130,10 @@ async def extract_skills(file: Annotated[UploadFile, Form()]):
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing PDF: {str(e)}")
+
+@app.get('/get-job-listing/')
+async def get_job_listing(query: Annotated[JobQuery, Form()]):
+    return {}
 
 if __name__ == "__main__":
     import uvicorn
