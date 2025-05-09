@@ -22,7 +22,7 @@ const PrepPage = () => {
         const jobs = await response.json();
         
         // Find the job by jobId (assuming jobId matches the job data structure)
-        const job = jobs.find((job) => job.id === Number(jobId));
+        const job = jobs.find((job) => job.title === jobId);
         setJobDetails(job); // Set the fetched job data
       } catch (err) {
         setError(err.message); // Handle error
