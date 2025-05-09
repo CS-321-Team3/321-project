@@ -47,27 +47,35 @@ const MainPage = () => {
 
   const navigate = useNavigate();
 
-  const handleSearch = (query) => {
-    setIsLoading(true);
-    
-    // Simulate API call with timeout
-    setTimeout(() => {
-      // Mock data - in a real app, this would come from an API
-      const mockResults = [
-        { id: 1, company: "Tech Solutions Inc.", position: "Frontend Developer", location: "Remote" },
-        { id: 2, company: "Digital Innovations", position: "React Developer", location: "New York, NY" },
-        { id: 3, company: "Webflow Systems", position: "UI Engineer", location: "San Francisco, CA" },
-        { id: 4, company: "Creative Tech", position: "Full Stack Developer", location: "Austin, TX" },
-      ].filter(job => 
-        job.company.toLowerCase().includes(query.toLowerCase()) || 
-        job.position.toLowerCase().includes(query.toLowerCase())
-      );
-      
-      setSearchResults(mockResults);
-      setHasSearched(true);
-      setIsLoading(false);
-    }, 1500);
-  };
+  const handleSearch = async (query) => {
+  setIsLoading(true);
+  try {
+    const url = query.trim()
+      ? `http://localhost:8000/potential_jobs/?search=${encodeURIComponent(query)}`
+      : `http://localhost:8000/potential_jobs/`; // fallback to all jobs
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Failed to fetch jobs");
+
+    const data = await response.json();
+
+    // Normalize structure if needed
+    const formattedResults = data.map((job, index) => ({
+      id: index,
+      company: job.title || "Unknown Company",
+      position: job.title || "Unknown Title",
+      location: "Remote", // or update if you add locations to backend
+    }));
+
+    setSearchResults(formattedResults);
+  } catch (err) {
+    console.error("Error fetching jobs:", err);
+    setSearchResults([]);
+  } finally {
+    setHasSearched(true);
+    setIsLoading(false);
+  }
+};
 
   const handlePrepare = (jobId) => {
     navigate(`/prepare/${jobId}`);
