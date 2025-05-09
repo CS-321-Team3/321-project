@@ -17,6 +17,7 @@ from datetime import time
 from datetime import datetime, timedelta, date
 from zoneinfo import ZoneInfo
 
+
 #jobs that could pop up
 potential_jobs = {
     "Amazon SDE" : {
@@ -63,6 +64,7 @@ curr_freetime = {
 
 #how long each skill takes to learn
 skill_time = {"python": 3, "sociable": 1, "kind": 2, "coding": 4, "hardworking": 1, "eating": 3, "quick": 1, "self-driver": 2, "cool": 1, "students": 3, "bed-side manner": 2, "strong": 3, "creative": 2, "marketing": 1}
+
 
 #searched words in search bar
 searched_words = ["job", "Computer Science", "internship", "intern", "aws", "google"]
@@ -230,6 +232,7 @@ def make_schedule(searched_words, potential_jobs, resume_skills, curr_freetime, 
     for skill in needed_skills:
         #see if the needed skill is in the resume
         if skill not in resume_skills: #not in, if in, it would be curr skills //NOT IN
+
         #NOTE YOU CAN VALIDATE THIS WORKS BY CHANGING TO 'in'^
         #cnat work yet because we need database
             #add the skill to the actual needed skill
@@ -296,6 +299,7 @@ def event_data(final_schedule):
     #opent the file and read
     with open("calendar_schedule.ics", "r") as file:
         imported_calendar = Calendar(file.read())
+
     
    # The code below is good for testing!
    # for event in imported_calendar.events:
@@ -339,6 +343,7 @@ def date_of_day(day):
 #event_data({'Monday': [('5-7', 'self-driver'), ('11-12', 'quick'), ('16-17', 'cool')], 'Thursday': [('4-7', 'eating')]})
     #note, we can not do unit tests on iCal so I manually checked
     
+
 # unit tests
 import unittest
 

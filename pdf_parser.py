@@ -96,4 +96,5 @@ pdf_path = "sample_resume.pdf"
 
 # s3_upload(pdf_path, "test_resume_IAM") #adds the pdf with the name "test_resume_IAM"
 # s3_list() #lists all of the objects currently in the bucket
+
 # print({"skills": skills_list})
