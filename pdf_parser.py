@@ -78,6 +78,6 @@ pdf_path = "sample_resume.pdf"
 # # Skills are then extracted from the test
 # skills_list = extract_skills_section(resume_text)
 
-s3_upload(pdf_path, "test_resume")
+#s3_upload(pdf_path, "test_resume")
 
 # print({"skills": skills_list})

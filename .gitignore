@@ -22,5 +22,6 @@
 /my-app/yarn-error.log*
 
 .env
+venv/
 credentials.db-journal
 __pycache__/*
