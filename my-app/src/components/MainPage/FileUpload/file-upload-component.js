@@ -1,69 +1,8 @@
 // components/FileUpload.js
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import './file-upload.css'
 
-// Example React code for uploading a PDF and getting skills
-async function uploadResume(file) {
-  const formData = new FormData();
-  formData.append("file", file);
-
-  try {
-    const response = await fetch("http://localhost:8000/extract-skills/", {
-      method: "POST",
-      body: formData,
-    });
-    
-    if (!response.ok) {
-      throw new Error("Failed to process the resume");
-    }
-    
-    const data = await response.json();
-    console.log("Extracted skills:", data.skills);
-    return data;
-  } catch (error) {
-    console.error("Error:", error);
-    return null;
-  }
-}
-
-const FileUpload = () => {
-  const [file, setFile] = useState(null);
-  const [uploading, setUploading] = useState(false);
-  const [uploadSuccess, setUploadSuccess] = useState(false);
-  const fileInputRef = useRef(null);
-
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    console.log(selectedFile);
-    if (selectedFile && selectedFile.type === 'application/pdf') {
-      setFile(selectedFile);
-      handleUpload(selectedFile);
-    } else if (selectedFile) {
-      alert('Please upload a PDF file only.');
-      fileInputRef.current.value = null;
-    }
-  };
-
-  const handleUpload = (selectedFile) => {
-    setUploading(true);
-    setUploadSuccess(false);
-    
-    // Simulate upload process
-    console.log(`File "${selectedFile.name}" would be uploaded to database`);
-    setUploading(false);
-    setUploadSuccess(true);
-    uploadResume(selectedFile);
-    setFile(null);
-    // Reset success message after some time
-    setTimeout(() => {
-      setUploadSuccess(false);
-    }, 3000);
-  };
-
-  const handleButtonClick = () => {
-    fileInputRef.current.click();
-  };
-
+const FileUpload = ( {uploading, uploadSuccess, handleButtonClick, handleFileChange, fileInputRef, file} ) => {
   return (
     <div className="file-upload-container">
       <h2>File Upload</h2>
