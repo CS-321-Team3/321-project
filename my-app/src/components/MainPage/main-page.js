@@ -24,11 +24,33 @@ async function uploadResume(file) {
     
     const data = await response.json();
     console.log("Extracted skills:", data.skills);
-    return data;
+    return data.skills;
   } catch (error) {
     console.error("Error:", error);
     return null;
   }
+}
+
+async function getJobInformation(query) {
+  const formData = new FormData();
+  formData.append("query", query);
+
+  try {
+    const response = await fetch("http://localhost:8000/get-job-listings/", {
+      method: "POST",
+      body: formData,
+    });
+    
+    if (!response.ok) {
+      throw new Error("Failed to process the resume");
+    }
+    
+    const data = await response.json();
+    return data.jobs;
+  } catch (error) {
+    console.error("Error:", error);
+    return null;
+  }  
 }
 
 const MainPage = () => {
@@ -43,34 +65,27 @@ const MainPage = () => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [resumeInformation, setResumeInformation] = useState(null);
   const fileInputRef = useRef(null);
 
   const navigate = useNavigate();
 
-  const handleSearch = (query) => {
+  const handleSearch = async (query) => {
     setIsLoading(true);
-    
-    // Simulate API call with timeout
-    setTimeout(() => {
-      // Mock data - in a real app, this would come from an API
-      const mockResults = [
-        { id: 1, company: "Tech Solutions Inc.", position: "Frontend Developer", location: "Remote" },
-        { id: 2, company: "Digital Innovations", position: "React Developer", location: "New York, NY" },
-        { id: 3, company: "Webflow Systems", position: "UI Engineer", location: "San Francisco, CA" },
-        { id: 4, company: "Creative Tech", position: "Full Stack Developer", location: "Austin, TX" },
-      ].filter(job => 
-        job.company.toLowerCase().includes(query.toLowerCase()) || 
-        job.position.toLowerCase().includes(query.toLowerCase())
-      );
-      
-      setSearchResults(mockResults);
-      setHasSearched(true);
-      setIsLoading(false);
-    }, 1500);
+    const results = await getJobInformation(query);
+    localStorage.setItem('jobListingInformation', JSON.stringify(results));
+    setSearchResults(results);
+    setHasSearched(true);
+    setIsLoading(false);
+  
   };
 
-  const handlePrepare = (jobId) => {
-    navigate(`/prepare/${jobId}`);
+  const handlePrepare = (job) => {
+    if (job == null || resumeInformation == null){
+      console.log("hey you need both");
+    } else {
+      navigate(`/prepare/${job._id}`);
+    }
   };
 
   const handleFileChange = (e) => {
@@ -85,7 +100,7 @@ const MainPage = () => {
     }
   };
 
-  const handleUpload = (selectedFile) => {
+  const handleUpload = async (selectedFile) => {
     setUploading(true);
     setUploadSuccess(false);
     
@@ -93,8 +108,11 @@ const MainPage = () => {
     console.log(`File "${selectedFile.name}" would be uploaded to database`);
     setUploading(false);
     setUploadSuccess(true);
-    uploadResume(selectedFile);
+    const extractedInformation = await uploadResume(selectedFile);
     setFile(null);
+    setResumeInformation(extractedInformation);
+    localStorage.setItem('resumeExtraction', JSON.stringify(extractedInformation));
+    
     // Reset success message after some time
     setTimeout(() => {
       setUploadSuccess(false);

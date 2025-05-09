@@ -33,17 +33,16 @@ const JobResults = ({ results, onPrepare, isLoading }) => {
       <h3>Results</h3>
       <div className="results-list">
         {results.map((job) => (
-          <div key={job.id} className="job-card">
+          <div key={job._id} className="job-card">
             <div className="job-info">
-              <h4 className="company-name">{job.company}</h4>
-              <h5 className="position-title">{job.position}</h5>
-              <p className="job-location">{job.location}</p>
+              <h4 className="job-name">{job.jobname}</h4>
+              <p className="job-location">{job.job_description}</p>
               {/* add required/desired skills */}
               {/* standardize job entry object */}
             </div>
             <button 
               className="prephandleUploadare-button"
-              onClick={() => onPrepare(job.id)}
+              onClick={() => onPrepare(job)}
             >
               Prepare!
             </button>
