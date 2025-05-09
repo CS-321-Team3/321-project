@@ -8,6 +8,7 @@ from typing import List
 from sorter import potential_jobs
 from sorter import searched_words
 from sorter import resume_skills
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
@@ -23,3 +24,11 @@ def get_search():
 @app.get("/resume_skills/", response_model = List[dict])
 def get_skills():
     return resume_skills;
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # or specify "http://localhost:3000"
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
