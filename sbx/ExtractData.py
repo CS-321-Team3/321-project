@@ -86,7 +86,7 @@ def main():
             if link.get("rel") == "next":
                 mainurl = link.get("href")
                 break
-    with open("jobs_with_skills.json", "w") as f:
+    with open("../data/jobs_with_skills.json", "w") as f:
         json.dump(listofjobs, f, indent=2)
     return testvalue
 #test
