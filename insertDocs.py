@@ -1,4 +1,6 @@
-
+# Ayesha K
+# insertDocs.py
+import json
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
@@ -64,20 +66,14 @@ insert_user_resume()
 def insert_job_listing():
     jobs_collection = db["jobs"]  # Collection for job listings
 
-    job_data = {
-        "title": "Software Engineer",
-        "company": "Google",
-        "location": "Mountain View, CA",
-        "required_skills": ["Python", "Java", "React"],
-        "preferred_qualifications": ["Cloud Computing", "Machine Learning"],
-        "experience_level": "Entry-Level",
-        "salary_range": "$100,000 - $120,000",
-        "job_url": "https://careers.google.com/job/software-engineer"
-    }
+    with open("jobs_with_skills.json", "r") as file:
+        job_data = json.load(file)  # should be a list of dicts
 
-    # Insert into MongoDB
-    inserted_id = jobs_collection.insert_one(job_data).inserted_id
-    print(f"Job Listing Inserted with ID: {inserted_id}")
+    if isinstance(job_data, list):
+        result = jobs_collection.insert_many(job_data)
+        print(f"Inserted {len(result.inserted_ids)} job records.")
+    else:
+        print("Error: job_data is not a list.")
 
 # Run the function
 insert_job_listing()
@@ -94,4 +90,4 @@ def fetch_jobs():
 
 # Call functions
 fetch_users()
-fetch_jobs()
+#fetch_jobs()
