@@ -98,6 +98,18 @@ def insert_resume_to_mongodb(resume_data):
     except Exception as e:
         print(f"❌ MongoDB insert error: {e}")
 
+def fetch_jobs(query):
+    uri = "mongodb+srv://AyeshaK:syDHLige6B6pXi1w@cluster0.w8q01.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    client = MongoClient(uri, server_api=ServerApi('1'))
+    db = client["JobSpanner"]
+    jobs_collection = db["jobs"]
+    jobs = jobs_collection.find(query).to_list(10)
+
+    for job in jobs:
+        job['_id'] = str(job['_id'])
+        
+    return jobs
+
 # Example using a sample resume
 # pdf_path = "sample_resume.pdf"
 
