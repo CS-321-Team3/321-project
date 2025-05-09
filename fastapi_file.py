@@ -14,16 +14,28 @@ app = FastAPI()
 
 #sample 
 @app.get("/potential_jobs/", response_model=List[dict])
-def get_jobs():
-    return [
-        {
-            "id": job_title,
-            "title": job_title,
-            "words": job_data["words"],
-            "skills": job_data["skills"]
-        }
-        for job_title, job_data in potential_jobs.items()
-    ]
+def get_jobs(query: str = Query(None, alias="search")):
+    if query:
+        return [
+            {
+                "id": job_title,
+                "title": job_title,
+                "words": job_data["words"],
+                "skills": job_data["skills"]
+            }
+            for job_title, job_data in potential_jobs.items()
+            if query.lower() in job_title.lower()
+        ]
+    else:
+        return [
+            {
+                "id": job_title,
+                "title": job_title,
+                "words": job_data["words"],
+                "skills": job_data["skills"]
+            }
+            for job_title, job_data in potential_jobs.items()
+        ]
     
 @app.get("/searched_words/", response_model = List[dict])
 def get_search():
