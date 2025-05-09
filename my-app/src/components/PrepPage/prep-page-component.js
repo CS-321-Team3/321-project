@@ -15,7 +15,7 @@ const PrepPage = () => {
       try {
         setLoading(true);
         // Fetch job details using the jobId
-        const response = await fetch(`http://localhost:8000/potential_jobs/`); 
+        const response = await fetch(`http://localhost:8000/potential_jobs/?search=${encodeURIComponent(jobId)}`);
         if (!response.ok) {
           throw new Error('Failed to fetch job details');
         }
