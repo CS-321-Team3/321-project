@@ -1,62 +1,63 @@
-// components/PrepPage.js
-import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import './prep-page.css';
+import React from 'react';
+import SkillsNeeded from './SkillsNeeded';
+import Calendar from './Calendar';
+import './JobApplicationPage.css';
+
+async function getcal(resumeskills, jobskills, timeneeded) {
+  const formData = new FormData();
+  formData.append('resume_skills', resumeskills);
+  formData.append('job_skills', jobskills);
+  formData.append('time_per_skill', timeneeded);
+  
+  try {
+    const response = await fetch("http://localhost:8000/get-schedule/", {
+      method: "POST",
+      body: formData,
+    });
+    
+    if (!response.ok) {
+      throw new Error("Failed to process the resume");
+    }
+    
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error:", error);
+    return null;
+  }
+}
 
 const PrepPage = () => {
-  const { jobId } = useParams(); // Get jobId from URL
-  const [jobDetails, setJobDetails] = useState(null); // State to store job data
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
+  // state for calendar available
+  job = JSON.parse(localStorage.getItem('jobListingInformation'));
+  resume = JSON.parse(localStorage.getItem('resumeExtraction'));
 
-  // Fetch job details when component mounts or jobId changes
-  useEffect(() => {
-    const fetchJobDetails = async () => {
-      try {
-        setLoading(true);
-        // Fetch job details using the jobId
-        const response = await fetch(`http://localhost:8000/potential_jobs/?search=${encodeURIComponent(jobId)}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch job details');
-        }
-        const jobs = await response.json();
-        
-        const job = jobs.find((job) => job.title === jobId);
-        setJobDetails(job); // Set the fetched job data
-      } catch (err) {
-        setError(err.message); // Handle error
-      } finally {
-        setLoading(false); // End loading
-      }
-    };
+  missingSkills = job.skills.map(item => item.skill).slice(0, 10);
 
-    fetchJobDetails();
-  }, [jobId]); // Re-run when jobId changes
+  const [timeNeeded, setTimeNeeded] = useState(
+    skills.reduce((acc, skill) => {
+      acc[skill.name] = skill.defaultTime || '';
+      return acc;
+    }, {})
+  );
 
-  if (loading) {
-    return <p>Loading job details...</p>;
-  }
-
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
-
-  if (!jobDetails) {
-    return <p>No job details found for ID: {jobId}</p>;
-  }
+  const handleTimeChange = (skillName, value) => {
+    setTimeNeeded(prev => ({
+      ...prev,
+      [skillName]: value
+    }));
+  };
 
   return (
-    <div className="prep-page-container">
-      <div className="prep-content">
-        <h1>Job Preparation for {jobDetails.title}</h1>
-        <p>Job ID: {jobId}</p>
-        <p><strong>Description:</strong> {jobDetails.description}</p>
-        <p><strong>Requirements:</strong> {jobDetails.requirements}</p>
-        <p><strong>Location:</strong> {jobDetails.location}</p>
-        <p><strong>Salary:</strong> {jobDetails.salary}</p>
-        <Link to="/" className="back-button">
-          Back to Search
-        </Link>
+    <div className="job-application-container">
+      <h1 className="job-title">{job.jobname}</h1>
+      <div className="content-layout">
+        <div className="skills-section">
+          <SkillsNeeded skills={missingSkills} timeNeeded={timeNeeded} handleTimeChange={handleTimeChange} />
+        </div>
+        <div className="calendar-section">
+          <Calendar icsFilePath={icsFilePath} />
+        </div>
       </div>
     </div>
   );
