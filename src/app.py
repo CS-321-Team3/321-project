@@ -1,14 +1,16 @@
 from fastapi import FastAPI, Form, UploadFile, File, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from typing import List, Annotated
-from pydantic import BaseModel
+from typing import List, Dict, Annotated
+from pydantic import BaseModel, Field
 import sqlite3 as sql
 import logging
+from datetime import datetime
+import re
 
 # Import functions from your existing code
-from pdf_parser import extract_text_from_pdf, extract_skills_section
+from pdf_parser import extract_text_from_pdf, extract_skills_section, insert_resume_to_mongodb, fetch_jobs
 
-app = FastAPI(title="JobSpanner API")
+app = FastAPI(title="JobSpanner API", debug=True)
 
 logger = logging.getLogger('uvicorn.error')
 logger.setLevel(logging.DEBUG)
@@ -24,6 +26,20 @@ app.add_middleware(
 class SkillsResponse(BaseModel):
     skills: List[str]
 
+class Skill(BaseModel):
+    skillname: str = Field(alias="Skill Name")
+    skill_importance: int = Field(alias="Skill Importance")
+
+class Job(BaseModel):
+    id:                str = Field(alias="_id")
+    jobname:           str
+    job_description:   str
+    skills:            List[Skill]
+    technology_skills: List[str]
+
+class JobsResponse(BaseModel):
+    jobs: List[Job]
+
 class UserAuth(BaseModel):
     username: str
     password: str
@@ -38,7 +54,10 @@ class PasswordReset(BaseModel):
     username:       str
     password:       str | None
 
-db = sql.connect('credentials.db')
+class JobQuery(BaseModel):
+    query: str
+
+db = sql.connect('../data/credentials.db')
 
 @app.post("/login/")
 async def userauth(data: Annotated[UserAuth, Form()]):
@@ -122,11 +141,50 @@ async def extract_skills(file: Annotated[UploadFile, Form()]):
         # Extract skills from the text
         skills_list = extract_skills_section(resume_text)
 
+        try:
+            insert_resume_to_mongodb(
+                {
+                    "file": datetime.now(),
+                    "file": file.filename,
+                    "extracted_data": skills_list
+                }
+            )
+        except:
+            logger.debug("some issue with adding to mongodb")
+
         # Return the skills list as JSON
         return {"skills": skills_list}
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing PDF: {str(e)}")
+
+@app.post('/get-job-listings/', response_model=JobsResponse)
+async def get_job_listings(jobquery: Annotated[JobQuery, Form()]):
+    query = jobquery.query
+    search_words = query.strip().split()
+        
+    # Create conditions for each word and each field
+    word_conditions = []
+    for word in search_words:
+        pattern = re.compile(f".*{re.escape(word)}.*", re.IGNORECASE)
+        
+        word_conditions.append({"jobname": {"$regex": pattern}})
+        word_conditions.append({"job_description": {"$regex": pattern}})
+        word_conditions.append({"location": {"$regex": pattern}})
+
+    # Combine with $or - matches if ANY condition is true
+    query = {"$or": word_conditions}
+    results = fetch_jobs(query)
+    if results == None or len(results) == 0:
+        logger.debug("wtf")
+        raise HTTPException(status_code=500, detail="Something went wrong with the request. Please try again.")
+
+    return {"jobs": results}
+
+
+# @app.get('/get-schedule/')
+# async def get_schedule(schedule_query):
+#     return {}
 
 if __name__ == "__main__":
     import uvicorn

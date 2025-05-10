@@ -59,20 +59,20 @@ def insert_resume_to_mongodb(resume_data):
 
 # --- Main Flow ---
 
-pdf_path = "sample_resume.pdf"
-resume_text = extract_text_from_pdf(pdf_path)
-skills = extract_skills_section(resume_text)
-email = extract_email(resume_text)
+# pdf_path = "sample_resume.pdf"
+# resume_text = extract_text_from_pdf(pdf_path)
+# skills = extract_skills_section(resume_text)
+# email = extract_email(resume_text)
 
-resume_data = {
-    "email": email,
-    "skills": skills,
-    "raw_text": resume_text,
-    "filename": pdf_path
-}
+# resume_data = {
+#     "email": email,
+#     "skills": skills,
+#     "raw_text": resume_text,
+#     "filename": pdf_path
+# }
 
-# Upload to S3
-s3_upload(pdf_path, "sample_resume.pdf")
+# # Upload to S3
+# s3_upload(pdf_path, "sample_resume.pdf")
 
-# Insert to MongoDB
-insert_resume_to_mongodb(resume_data)
+# # Insert to MongoDB
+# insert_resume_to_mongodb(resume_data)
