@@ -57,6 +57,14 @@ class PasswordReset(BaseModel):
 class JobQuery(BaseModel):
     query: str
 
+class ScheduleQuery(BaseModel):
+    resume_skills:  List[str]
+    job_skills:     List[str]
+    time_per_skill: Dict[str, int]
+
+class ScheduleResponse(BaseModel):
+    cal_fp: str
+
 db = sql.connect('../data/credentials.db')
 
 @app.post("/login/")
@@ -181,10 +189,9 @@ async def get_job_listings(jobquery: Annotated[JobQuery, Form()]):
 
     return {"jobs": results}
 
-
-# @app.get('/get-schedule/')
-# async def get_schedule(schedule_query):
-#     return {}
+@app.post('/get-schedule/', response_model=ScheduleResponse)
+async def get_schedule(schedule_query: Annotated[ScheduleQuery, Form()]):
+    pass
 
 if __name__ == "__main__":
     import uvicorn

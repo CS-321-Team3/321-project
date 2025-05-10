@@ -53,11 +53,11 @@ potential_jobs = {
 #person's inputted free time (user will input what hours they are free at
 #this will be converted into military time
 curr_freetime = {
-    "Monday" : {5, 6, 11, 16},
-    "Tuesday": {8, 9, 13, 3},
-    "Wednesdy": {5, 7, 20, 21},
-    "Thursday": {4, 5, 6, 14, 15},
-    "Friday": {3, 4},
+    "Monday" : {17, 18, 19, 20, 21, 22, 23},
+    "Tuesday": {17, 18, 19, 20, 21, 22, 23},
+    "Wednesdy": {17, 18, 19, 20, 21, 22, 23},
+    "Thursday": {17, 18, 19, 20, 21, 22, 23},
+    "Friday": {17, 18, 19, 20, 21, 22, 23},
     "Saturday" : {0},
     "Sunday" : {0}
 }
@@ -222,8 +222,7 @@ def group_hours(hours):
     return time_block
         
 #use persons schedule and skills needed to develop
-def make_schedule(searched_words, potential_jobs, resume_skills, curr_freetime, skill_time):
-    needed_skills = best_skills(searched_words, potential_jobs, resume_skills)
+def make_schedule(needed_skills, resume_skills, curr_freetime, skill_time):
     #first check to see if needed skills are on resume
     study_skills = []
     #dict with day, time, skill
