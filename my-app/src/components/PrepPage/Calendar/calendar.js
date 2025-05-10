@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { parseICS } from './ics'; // We'll create this utility next
-import './Calendar.css';
+import './calendar.css';
 
 const Calendar = ({ icsFilePath }) => {
   const [calendarEvents, setCalendarEvents] = useState([]);
@@ -14,13 +14,14 @@ const Calendar = ({ icsFilePath }) => {
         setIsLoading(true);
         // In a real app, you would use an API endpoint to fetch the ICS file
         // This is a placeholder for demonstration purposes
-        const response = await fetch(`/api/calendar-data?path=${encodeURIComponent(icsFilePath)}`);
+        const response = await fetch(`/data/calendar_schedule.ics`);
         
         if (!response.ok) {
           throw new Error('Failed to fetch calendar data');
         }
         
         const icsData = await response.text();
+        console.log(`ics data: ${icsData}`);
         const events = parseICS(icsData);
         setCalendarEvents(events);
       } catch (err) {

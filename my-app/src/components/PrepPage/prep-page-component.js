@@ -1,7 +1,7 @@
-import React from 'react';
-import SkillsNeeded from './SkillsNeeded';
-import Calendar from './Calendar';
-import './JobApplicationPage.css';
+import React, { useState } from 'react';
+import SkillsNeeded from './SkillsNeeded/skills-needed';
+import Calendar from './Calendar/calendar';
+import './prep-page.css';
 
 async function getcal(resumeskills, jobskills, timeneeded) {
   const formData = new FormData();
@@ -29,14 +29,14 @@ async function getcal(resumeskills, jobskills, timeneeded) {
 
 const PrepPage = () => {
   // state for calendar available
-  job = JSON.parse(localStorage.getItem('jobListingInformation'));
-  resume = JSON.parse(localStorage.getItem('resumeExtraction'));
-
-  missingSkills = job.skills.map(item => item.skill).slice(0, 10);
+  // const job = JSON.parse(localStorage.getItem('jobListingInformation'));
+  const resume = JSON.parse(localStorage.getItem('resumeExtraction'));
+  console.log(`prep page: ${resume}`)
+  const missingSkills = ['Python', 'Java', 'GraphQL', 'Prompt Engineering']
 
   const [timeNeeded, setTimeNeeded] = useState(
-    skills.reduce((acc, skill) => {
-      acc[skill.name] = skill.defaultTime || '';
+    missingSkills.reduce((acc, skill) => {
+      acc[skill] = skill.defaultTime || '';
       return acc;
     }, {})
   );
@@ -48,15 +48,32 @@ const PrepPage = () => {
     }));
   };
 
+  const [icsFilePath, setICSFilepath] = useState(null);
+  const [haveSchedule, setHaveSchedule] = useState(false);
+
+  const handleSubmit = async () => {
+    const ical_fp = await getcal(resume, missingSkills, timeNeeded);
+    setICSFilepath(ical_fp);
+    setHaveSchedule(true);
+  }
+  
   return (
-    <div className="job-application-container">
-      <h1 className="job-title">{job.jobname}</h1>
+    <div className="prep-page-container">
+      <h1 className="prep-content">Preparation</h1>
       <div className="content-layout">
         <div className="skills-section">
           <SkillsNeeded skills={missingSkills} timeNeeded={timeNeeded} handleTimeChange={handleTimeChange} />
+          <div className="action-button-container">
+            <button 
+              className="generate-plan-button" 
+              onClick={handleSubmit}
+            >
+              Generate Learning Plan
+            </button>
+          </div>
         </div>
         <div className="calendar-section">
-          <Calendar icsFilePath={icsFilePath} />
+          { haveSchedule && (<Calendar icsFilePath={icsFilePath} />)}
         </div>
       </div>
     </div>

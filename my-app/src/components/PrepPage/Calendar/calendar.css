@@ -1,0 +1,114 @@
+.calendar-container {
+    padding: 1rem;
+  }
+  
+  .calendar-header {
+    font-size: 1.8rem;
+    color: #47A2FF; /* Blue color from mockup */
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+  }
+  
+  .calendar-loading,
+  .calendar-error {
+    padding: 2rem;
+    text-align: center;
+    color: #f0f0f0;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 0.5rem;
+  }
+  
+  .calendar-error {
+    color: #ff6b6b;
+  }
+  
+  .calendar-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .current-month {
+    font-size: 1.2rem;
+    color: #f0f0f0;
+  }
+  
+  .month-nav-btn {
+    background-color: #47A2FF; /* Blue color from mockup */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .month-nav-btn:hover {
+    background-color: #3a82cc;
+  }
+  
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+    border: 2px solid #47A2FF; /* Blue color from mockup */
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background-color: rgba(71, 162, 255, 0.05); /* Very light blue background */
+  }
+  
+  .weekday-header {
+    background-color: rgba(71, 162, 255, 0.2); /* Light blue background */
+    padding: 0.5rem;
+    text-align: center;
+    font-weight: bold;
+    color: #47A2FF; /* Blue color from mockup */
+  }
+  
+  .calendar-day {
+    min-height: 80px;
+    padding: 0.25rem;
+    border-top: 1px solid rgba(71, 162, 255, 0.2);
+    position: relative;
+  }
+  
+  .calendar-day.empty {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  .day-number {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    font-size: 0.85rem;
+    color: #bbb;
+  }
+  
+  .day-events {
+    margin-top: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .event-item {
+    background-color: rgba(71, 162, 255, 0.7); /* Semi-transparent blue */
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+  }
+  
+  .event-item:hover {
+    background-color: #47A2FF; /* Solid blue on hover */
+  }

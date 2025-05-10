@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './skills-needed.css';
 
 const SkillsNeeded = ({ skills = [], timeNeeded, handleTimeChange }) => {
@@ -7,15 +7,15 @@ const SkillsNeeded = ({ skills = [], timeNeeded, handleTimeChange }) => {
       <h2 className="skills-header">You need:</h2>
       <div className="skills-list">
         {skills.map(skill => (
-          <div key={skill.name} className="skill-item">
-            <div className="skill-name">{skill.name}</div>
+          <div key={skill} className="skill-item">
+            <div className="skill-name">{skill}</div>
             <div className="time-input-container">
               <input
                 type="text"
                 className="time-input"
-                value={timeNeeded[skill.name]}
-                onChange={(e) => handleTimeChange(skill.name, e.target.value)}
-                placeholder="0"
+                value={timeNeeded[skill]}
+                onChange={(e) => handleTimeChange(skill, e.target.value)}
+                placeholder="1"
               />
               <span className="time-unit">hrs</span>
             </div>
